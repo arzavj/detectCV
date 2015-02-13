@@ -3,6 +3,8 @@ An application that detects and labels objects in a video taken from an RGB came
 
 <h3>Setup Instructions</h3>
 
+<i>You need to have OpenCV installed and built, as well as Qt Creator.</i>
+
 1. Clone the repo.
 2. On a Mac you might have to do:
 <ul>
