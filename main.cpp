@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int, char **)
 {
-    Mat frame = imread("testframe_3.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+    Mat frame = imread("data/testframe_3.jpg", CV_LOAD_IMAGE_GRAYSCALE);
     if ( frame.rows <= 0 || frame.cols <= 0 ) {
         printf("Fail to load image\n");
         return 1;
