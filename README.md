@@ -17,3 +17,5 @@ An application that detects and labels objects in a video taken from an RGB came
 5. Click on Projects (on the left pane) -> Run (on top) and then change the Working Directory to the detectCV folder that you cloned.
 6. Click Run.
 
+<h3>QT Creator Setup for Mac</h3>
+Follow http://stanford.edu/~rawatson/lair/mac.html
