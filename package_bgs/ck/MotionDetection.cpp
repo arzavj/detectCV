@@ -26,11 +26,11 @@
 #include "graph.h"
 using namespace ck;
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
-#include <cvaux.h>
-#else
+//#if defined(__MINGW32__) || defined(__MINGW64__)
+//#include <cvaux.h>
+//#else
 #include <opencv/cvaux.h>
-#endif
+//#endif
 
 #include "MEHistogram.hpp"
 #include "MEImage.hpp"

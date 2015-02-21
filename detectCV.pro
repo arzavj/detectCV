@@ -5,14 +5,62 @@
 #-------------------------------------------------
 
 QT       += core
-
 QT       -= gui
-
 TARGET = detectCV
 CONFIG   += console
 CONFIG   -= app_bundle
-
 TEMPLATE = app
+
+
+CONFIG += c++11
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+
+
+macx {
+    INCLUDEPATH += /usr/local/include
+
+    LIBS += -L/usr/local/lib
+
+    LIBS += -lopencv_calib3d \
+            -lopencv_contrib \
+            -lopencv_core \
+            -lopencv_features2d \
+            -lopencv_flann \
+            -lopencv_gpu \
+            -lopencv_highgui \
+            -lopencv_imgproc \
+            -lopencv_legacy \
+            -lopencv_ml \
+            -lopencv_objdetect \
+            -lopencv_video
+}
+
+win32 {
+    #opencv include files
+    INCLUDEPATH += D:\opencv\build\x86\mingw\install\include
+    #opencv libs
+    LIBS += -L"D:/opencv/build/x86/mingw/install/x86/mingw/bin"
+    LIBS += -lopencv_calib3d2410 \
+            -lopencv_contrib2410 \
+            -lopencv_core2410 \
+            -lopencv_features2d2410 \
+            -lopencv_flann2410 \
+            -lopencv_gpu2410 \
+            -lopencv_highgui2410 \
+            -lopencv_imgproc2410 \
+            -lopencv_legacy2410 \
+            -lopencv_ml2410 \
+            -lopencv_nonfree2410 \
+            -lopencv_objdetect2410 \
+            -lopencv_ocl2410 \
+            -lopencv_photo2410 \
+            -lopencv_stitching2410 \
+            -lopencv_superres2410 \
+            -lopencv_video2410 \
+            -lopencv_videostab2410 # here just use dll file names without "lib" just add "-l" in front
+}
+
+
 
 SOURCES += main.cpp \
     ObjectExtractor.cpp \
@@ -100,25 +148,6 @@ SOURCES += main.cpp \
     package_bgs/WeightedMovingVarianceBGS.cpp \
     BGSConvertor.cpp
 
-CONFIG += c++11
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
-
-INCLUDEPATH += /usr/local/include
-
-LIBS += -L/usr/local/lib
-
-LIBS += -lopencv_calib3d \
--lopencv_contrib \
--lopencv_core \
--lopencv_features2d \
--lopencv_flann \
--lopencv_gpu \
--lopencv_highgui \
--lopencv_imgproc \
--lopencv_legacy \
--lopencv_ml \
--lopencv_objdetect \
--lopencv_video
 
 HEADERS += \
     ObjectExtractor.h \
