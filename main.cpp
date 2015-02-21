@@ -14,26 +14,26 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
-    string videoName = "data/WeightedMovingMean.avi";
+    string videoName = "data/DPEigenbackgroundBGS.avi";
     VideoCapture cap(videoName); // open the default camera
     if (!cap.isOpened()) {
         std::cout << "video not opened\n";
         exit(1);
     }
 
-    string originalVideoName = "data/train.avi";
-    VideoCapture origCap(originalVideoName);
-    if (!origCap.isOpened()) {
-        std::cout << "original video not opened\n";
-        exit(1);
-    }
+//    string originalVideoName = "data/train.avi";
+//    VideoCapture origCap(originalVideoName);
+//    if (!origCap.isOpened()) {
+//        std::cout << "original video not opened\n";
+//        exit(1);
+//    }
 
     Mat frame;
     Mat origFrame;
     ObjectExtractor extractor;
     while(1) {
         cap >> frame;
-        origCap >> origFrame;
+//        origCap >> origFrame;
         if (!frame.data) {
             break;
         }
@@ -44,10 +44,10 @@ int main(int, char **)
         for (Rect box : boxes){
             std::cout << box << endl;
             rectangle(frame, box, Scalar(255, 255, 255));
-            rectangle(origFrame, box, Scalar(255, 255, 255));
+//            rectangle(origFrame, box, Scalar(255, 255, 255));
         }
         imshow("BGS Detection", frame);
-        imshow("Original Detection", origFrame);
+//        imshow("Original Detection", origFrame);
 
         if (cvWaitKey(1) >= 0)
             break;
