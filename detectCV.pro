@@ -218,4 +218,8 @@ HEADERS += \
     BGSConvertor.h
 
 OTHER_FILES += \
-    testframe_3.jpg
+    testframe_3.jpg \
+    package_bgs/pl/LBSP_16bits_dbcross_1ch.i \
+    package_bgs/pl/LBSP_16bits_dbcross_3ch1t.i \
+    package_bgs/pl/LBSP_16bits_dbcross_3ch3t.i \
+    package_bgs/pl/LBSP_16bits_dbcross_s3ch.i
