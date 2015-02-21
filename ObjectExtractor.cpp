@@ -29,6 +29,13 @@ vector<Rect> ObjectExtractor::cluster(Mat frame){
         }
     }
 
+    vector<Rect> rects;
+    int clusterCount = 6;
+    if (whitePoints.size() < clusterCount) {
+        std::cout << "Too few white points to cluster! \n";
+        return rects;
+    }
+
     // Construct a Mat with all the points
     Mat samples(whitePoints.size(), 2, CV_32F);
     for (int i = 0; i < whitePoints.size(); i++){
@@ -39,7 +46,6 @@ vector<Rect> ObjectExtractor::cluster(Mat frame){
     }
 
     // Perform k-means
-    int clusterCount = 6;
     Mat clusterAssignments;
     int attempts = 2;
     Mat centers;
@@ -75,7 +81,6 @@ vector<Rect> ObjectExtractor::cluster(Mat frame){
         if (x > boxes[clusterId].maxX) boxes[clusterId].maxX = x;
     }
 
-    vector<Rect> rects;
     for (box b : boxes){
         Point2i minPt(b.minX, b.minY);
         Point2i maxPt(b.maxX, b.maxY);

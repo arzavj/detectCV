@@ -222,4 +222,5 @@ OTHER_FILES += \
     package_bgs/pl/LBSP_16bits_dbcross_1ch.i \
     package_bgs/pl/LBSP_16bits_dbcross_3ch1t.i \
     package_bgs/pl/LBSP_16bits_dbcross_3ch3t.i \
-    package_bgs/pl/LBSP_16bits_dbcross_s3ch.i
+    package_bgs/pl/LBSP_16bits_dbcross_s3ch.i \
+    data/DPEigenbackgroundBGS.avi
