@@ -1,6 +1,8 @@
 # Input and Output data
 data/*
 
+*.pro.user
+
 # Compiled Object files
 *.slo
 *.lo
