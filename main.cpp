@@ -14,46 +14,40 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
-    string originalVideoName = "data/DPEigenbackgroundBGS.avi";
+    string originalVideoName = "data/train.avi";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {
         std::cout << "input video not opened\n";
         exit(1);
     }
 
-//    IBGS *bgs = new DPEigenbackgroundBGS();
-    Mat frame = imread("data/testframe_1.jpg");
+    IBGS *bgs = new DPEigenbackgroundBGS();
+    Mat frame;
     ObjectExtractor extractor;
-//    Mat img_mask;
-//    Mat img_bkgmodel;
-//    Mat imageGrey;
+    Mat img_mask;
+    Mat img_bkgmodel;
+    Mat imageGrey;
 
-//    while(1) {
-//        inputVideo >> frame;
-//        if (!frame.data) {
-//            break;
-//        }
+    while(1) {
+        inputVideo >> frame;
+        if (!frame.data) {
+            break;
+        }
 
-//        bgs->process(frame, img_mask, img_bkgmodel);
-//        if (img_mask.data) {
-//            // Attempt to fix Mac OS gray scale not able to be written
-//            Mat imageArr[] {img_mask, img_mask, img_mask};
-//            merge(imageArr, 3, imageGrey);
-//        }
+        bgs->process(frame, img_mask, img_bkgmodel);
+        imshow("BGS Subtracted Frame", img_mask);
 
-        cvtColor(frame,frame,CV_RGB2GRAY);
-        vector<Rect> boxes = extractor.extractBoxes(frame);
+        vector<Rect> boxes = extractor.extractBoxes(img_mask);
         for (Rect box : boxes){
-            std::cout << box << endl;
             rectangle(frame, box, Scalar(255, 255, 255));
         }
-        imshow("BGS Detection", frame);
 
-//        if (cvWaitKey(1) >= 0)
-//            break;
-//    }
-    if (cvWaitKey(0) >= 0)
-        return 0;
+        imshow("BGS Detection", frame);
+        printf("Done drawing %d boxes\n", boxes.size());
+
+        if (cvWaitKey(10) >= 0)
+            break;
+    }
     return 0;
 }
 

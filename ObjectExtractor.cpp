@@ -7,6 +7,8 @@
 #define SW_A SW_H*SW_W
 #define THRESH 0.1
 #define THRESH_NUMPX (int)(THRESH*SW_A)
+#define DX 30
+#define DY 10
 
 struct box{
     int minY, maxY, minX, maxX;
@@ -42,7 +44,7 @@ static bool hasSufficientWhitePixels(Point2i& topLeft, unordered_set<Point2i, Po
                                      int numCols){
     int lastWindowCol = topLeft.x+SW_W;
     int lastWindowRow = topLeft.y+SW_H;
-    if (lastWindowCol >= numCols || lastWindowRow >= numRows) {
+    if (topLeft.x < 0 || topLeft.y < 0 || lastWindowCol >= numCols || lastWindowRow >= numRows) {
         return false;
     }
 
@@ -55,8 +57,6 @@ static bool hasSufficientWhitePixels(Point2i& topLeft, unordered_set<Point2i, Po
         unordered_set_intersect(whitePixels, rowWhites[row], colPixels);
     }
 
-    printf("Top Left = (%d, %d)\n", topLeft.x, topLeft.y);
-    printf("Num White Pixels = %d\n\n", whitePixels.size());
     return whitePixels.size() > THRESH_NUMPX;
 
 }
@@ -65,6 +65,7 @@ vector<Rect> ObjectExtractor::extractBoxes(Mat frame){
 
     unordered_set<Point2i, Point2iHash>* rowWhites = new unordered_set<Point2i, Point2iHash>[frame.rows];
     unordered_set<Point2i, Point2iHash>* colWhites = new unordered_set<Point2i, Point2iHash>[frame.cols];
+    vector<int>* rowWhiteVectors  = new vector<int>[frame.rows];
     for (int y = 0; y < frame.rows; y++){
         for (int x = 0; x < frame.cols; x++){
             uchar pxVal = frame.at<uchar>(y, x);
@@ -73,24 +74,28 @@ vector<Rect> ObjectExtractor::extractBoxes(Mat frame){
                 Point2i pt(x, y);
                 rowWhites[y].insert(pt);
                 colWhites[x].insert(pt);
+                rowWhiteVectors[y].push_back(x);
             }
         }
     }
 
     vector<Rect> rects;
-    for (int y = 0; y < frame.rows; y++){
-        for (Point2i topLeft : rowWhites[y]) {
-//            printf("Top Left = (%d, %d)\n", topLeft.x, topLeft.y);
-            if (hasSufficientWhitePixels(topLeft, rowWhites, frame.rows, colWhites, frame.cols)){
-                printf("hassufficient white pixels\n");
-                Point2i bottomRight(topLeft.x + SW_W, topLeft.y + SW_H);
-                rects.push_back(Rect(topLeft, bottomRight));
+    for (int y = 0; y < frame.rows; y += DY){
+        for (int i = 0; i < rowWhiteVectors[y].size(); i += DY) {
+            Point2i top(rowWhiteVectors[y][i], y);
+            for (int dx = 0; dx < SW_W; dx += DX) {
+                Point2i topLeft(top.x - dx, top.y);
+                if (hasSufficientWhitePixels(topLeft, rowWhites, frame.rows, colWhites, frame.cols)){
+                    Point2i bottomRight(topLeft.x + SW_W, topLeft.y + SW_H);
+                    rects.push_back(Rect(topLeft, bottomRight));
+                }
             }
         }
     }
 
     delete [] rowWhites;
     delete [] colWhites;
+    delete [] rowWhiteVectors;
 
     return rects;
 }
