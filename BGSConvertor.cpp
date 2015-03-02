@@ -36,6 +36,11 @@ BGSConvertor::BGSConvertor(std::string bgs_class) {
         bgs = new AdaptiveSelectiveBackgroundLearning();
         return;
     }
+
+    if (bgs_class.compare("DPEigenbackgroundBGS") == 0) {
+        bgs = new DPEigenbackgroundBGS();
+        return;
+    }
     
     std::cout << "No matching BGS Type specified in bgs_convert constructor\n";
 }

@@ -18,6 +18,8 @@
 #include "package_bgs/WeightedMovingVarianceBGS.h"
 #include "package_bgs/AdaptiveBackgroundLearning.h"
 #include "package_bgs/AdaptiveSelectiveBackgroundLearning.h"
+#include "package_bgs/dp/DPEigenbackgroundBGS.h"
+
 using namespace cv;
 
 class BGSConvertor {

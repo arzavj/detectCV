@@ -14,44 +14,46 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
-    string videoName = "data/DPEigenbackgroundBGS.avi";
-    VideoCapture cap(videoName); // open the default camera
-    if (!cap.isOpened()) {
-        std::cout << "video not opened\n";
+    string originalVideoName = "data/DPEigenbackgroundBGS.avi";
+    VideoCapture inputVideo(originalVideoName);
+    if (!inputVideo.isOpened()) {
+        std::cout << "input video not opened\n";
         exit(1);
     }
 
-//    string originalVideoName = "data/train.avi";
-//    VideoCapture origCap(originalVideoName);
-//    if (!origCap.isOpened()) {
-//        std::cout << "original video not opened\n";
-//        exit(1);
-//    }
-
-    Mat frame;
-    Mat origFrame;
+//    IBGS *bgs = new DPEigenbackgroundBGS();
+    Mat frame = imread("data/testframe_1.jpg");
     ObjectExtractor extractor;
-    while(1) {
-        cap >> frame;
-//        origCap >> origFrame;
-        if (!frame.data) {
-            break;
-        }
+//    Mat img_mask;
+//    Mat img_bkgmodel;
+//    Mat imageGrey;
+
+//    while(1) {
+//        inputVideo >> frame;
+//        if (!frame.data) {
+//            break;
+//        }
+
+//        bgs->process(frame, img_mask, img_bkgmodel);
+//        if (img_mask.data) {
+//            // Attempt to fix Mac OS gray scale not able to be written
+//            Mat imageArr[] {img_mask, img_mask, img_mask};
+//            merge(imageArr, 3, imageGrey);
+//        }
 
         cvtColor(frame,frame,CV_RGB2GRAY);
-
         vector<Rect> boxes = extractor.extractBoxes(frame);
         for (Rect box : boxes){
             std::cout << box << endl;
             rectangle(frame, box, Scalar(255, 255, 255));
-//            rectangle(origFrame, box, Scalar(255, 255, 255));
         }
         imshow("BGS Detection", frame);
-//        imshow("Original Detection", origFrame);
 
-        if (cvWaitKey(1) >= 0)
-            break;
-    }
+//        if (cvWaitKey(1) >= 0)
+//            break;
+//    }
+    if (cvWaitKey(0) >= 0)
+        return 0;
     return 0;
 }
 

@@ -1,5 +1,12 @@
 #include "ObjectExtractor.h"
 #include <math.h>
+#include <unordered_set>
+
+#define SW_H 150
+#define SW_W 80
+#define SW_A SW_H*SW_W
+#define THRESH 0.1
+#define THRESH_NUMPX (int)(THRESH*SW_A)
 
 struct box{
     int minY, maxY, minX, maxX;
@@ -10,11 +17,83 @@ ObjectExtractor::ObjectExtractor()
 
 }
 
-vector<Rect> ObjectExtractor::extractBoxes(Mat frame){
+struct Point2iHash {
+   size_t operator() (const Point2i &p) const {
+     return p.x+7919*p.y;
+   }
+};
 
-    return cluster(frame);
+static void unordered_set_intersect(unordered_set<Point2i, Point2iHash> &out,
+    const unordered_set<Point2i, Point2iHash> &in1, const unordered_set<Point2i, Point2iHash> &in2)
+{
+    if (in2.size() < in1.size()) {
+        unordered_set_intersect(out, in2, in1);
+        return;
+    }
+    for (unordered_set<Point2i, Point2iHash>::const_iterator it = in1.begin(); it != in1.end(); it++)
+    {
+        if (in2.find(*it) != in2.end())
+            out.insert(*it);
+    }
 }
 
+static bool hasSufficientWhitePixels(Point2i& topLeft, unordered_set<Point2i, Point2iHash>* rowWhites,
+                                     int numRows, unordered_set<Point2i, Point2iHash>* colWhites,
+                                     int numCols){
+    int lastWindowCol = topLeft.x+SW_W;
+    int lastWindowRow = topLeft.y+SW_H;
+    if (lastWindowCol >= numCols || lastWindowRow >= numRows) {
+        return false;
+    }
+
+    unordered_set<Point2i, Point2iHash> colPixels;
+    unordered_set<Point2i, Point2iHash> whitePixels;
+    for (int col = topLeft.x; col < lastWindowCol; col++){
+        colPixels.insert(colWhites[col].begin(), colWhites[col].end());
+    }
+    for (int row = topLeft.y; row < lastWindowRow; row++){
+        unordered_set_intersect(whitePixels, rowWhites[row], colPixels);
+    }
+
+    printf("Top Left = (%d, %d)\n", topLeft.x, topLeft.y);
+    printf("Num White Pixels = %d\n\n", whitePixels.size());
+    return whitePixels.size() > THRESH_NUMPX;
+
+}
+
+vector<Rect> ObjectExtractor::extractBoxes(Mat frame){
+
+    unordered_set<Point2i, Point2iHash>* rowWhites = new unordered_set<Point2i, Point2iHash>[frame.rows];
+    unordered_set<Point2i, Point2iHash>* colWhites = new unordered_set<Point2i, Point2iHash>[frame.cols];
+    for (int y = 0; y < frame.rows; y++){
+        for (int x = 0; x < frame.cols; x++){
+            uchar pxVal = frame.at<uchar>(y, x);
+
+            if (pxVal > 200) {
+                Point2i pt(x, y);
+                rowWhites[y].insert(pt);
+                colWhites[x].insert(pt);
+            }
+        }
+    }
+
+    vector<Rect> rects;
+    for (int y = 0; y < frame.rows; y++){
+        for (Point2i topLeft : rowWhites[y]) {
+//            printf("Top Left = (%d, %d)\n", topLeft.x, topLeft.y);
+            if (hasSufficientWhitePixels(topLeft, rowWhites, frame.rows, colWhites, frame.cols)){
+                printf("hassufficient white pixels\n");
+                Point2i bottomRight(topLeft.x + SW_W, topLeft.y + SW_H);
+                rects.push_back(Rect(topLeft, bottomRight));
+            }
+        }
+    }
+
+    delete [] rowWhites;
+    delete [] colWhites;
+
+    return rects;
+}
 
 vector<Rect> ObjectExtractor::cluster(Mat frame){
     // First allocate a vector of all the active points
