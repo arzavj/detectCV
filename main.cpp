@@ -35,7 +35,7 @@ int main(int, char **)
         }
 
         bgs->process(frame, img_mask, img_bkgmodel);
-        imshow("BGS Subtracted Frame", img_mask);
+//        imshow("BGS Subtracted Frame", img_mask);
 
         vector<Rect> boxes = extractor.extractBoxes(img_mask);
         for (Rect box : boxes){

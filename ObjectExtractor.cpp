@@ -9,6 +9,7 @@
 #define THRESH_NUMPX (int)(THRESH*SW_A)
 #define DX 30
 #define DY 10
+#define BOUNDING_BOX_AREA_THRESH 50
 
 struct box{
     int minY, maxY, minX, maxX;
@@ -61,8 +62,7 @@ static bool hasSufficientWhitePixels(Point2i& topLeft, unordered_set<Point2i, Po
 
 }
 
-vector<Rect> ObjectExtractor::extractBoxes(Mat frame){
-
+static vector<Rect> extractBoxesSlow(Mat frame) {
     unordered_set<Point2i, Point2iHash>* rowWhites = new unordered_set<Point2i, Point2iHash>[frame.rows];
     unordered_set<Point2i, Point2iHash>* colWhites = new unordered_set<Point2i, Point2iHash>[frame.cols];
     vector<int>* rowWhiteVectors  = new vector<int>[frame.rows];
@@ -99,6 +99,66 @@ vector<Rect> ObjectExtractor::extractBoxes(Mat frame){
 
     return rects;
 }
+
+static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows) {
+    Point topLeft = boundingBox.tl();
+    Point bottomRight = boundingBox.br();
+    for (int y = topLeft.y; y <= (bottomRight.y - SW_H); y += DY) {
+        for (int x = topLeft.x; x <= (bottomRight.x - SW_W); x += DX) {
+            slidingWindows.push_back(Rect(x, y, SW_W, SW_H));
+        }
+    }
+}
+
+static vector<Rect> extractContourBoxes(Mat frame) {
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+
+    Mat blur_out;
+    GaussianBlur(frame, blur_out, Size(1,1), 2.0, 2.0);
+
+    blur_out = blur_out >= 200;
+    int erosion_size = 1;
+    Mat element = getStructuringElement(MORPH_RECT, Size( 2*erosion_size + 1, 2*erosion_size+1 ));
+
+    Mat morphedFrame;
+    morphologyEx(blur_out, morphedFrame, MORPH_CLOSE, element);
+//    dilate(blur_out, morphedFrame, element, Point(-1, -1), 1);
+//    erode(morphedFrame, morphedFrame, element, Point(-1, -1), 2);
+//    dilate(morphedFrame, morphedFrame, element, Point(-1, -1), 1);
+
+    findContours(morphedFrame, contours, hierarchy, CV_RETR_EXTERNAL,  CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+
+    // Approximate contours to get bounding rects
+    vector<vector<Point> > contours_poly( contours.size() );
+    vector<Rect> boundRects( contours.size() );
+
+    for( int i = 0; i < contours.size(); i++ )
+    {
+        approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
+        boundRects[i] = boundingRect( Mat(contours_poly[i]) );
+    }
+
+    vector<Rect> slidingWindows;
+    for (Rect boundingBox: boundRects) {
+//        rectangle(morphedFrame, boundingBox, Scalar(255, 255, 255));
+//        Size s = boundingBox.size();
+//        char text[21];
+//        sprintf(text, "%d x %d", s.width, s.height);
+//        putText(morphedFrame, text, boundingBox.tl(), FONT_HERSHEY_SIMPLEX, 0.1, Scalar(255, 255, 255));
+        if (boundingBox.area() > BOUNDING_BOX_AREA_THRESH) {
+            getSlidingWindows(boundingBox, slidingWindows);
+        }
+    }
+
+    return slidingWindows;
+}
+
+vector<Rect> ObjectExtractor::extractBoxes(Mat frame) {
+    // return extractBoxesSlow(frame);
+    return extractContourBoxes(frame);
+}
+
 
 vector<Rect> ObjectExtractor::cluster(Mat frame){
     // First allocate a vector of all the active points
