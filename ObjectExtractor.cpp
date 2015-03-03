@@ -9,7 +9,7 @@
 #define THRESH_NUMPX (int)(THRESH*SW_A)
 #define DX 30
 #define DY 10
-#define BOUNDING_BOX_AREA_THRESH 50
+#define BOUNDING_BOX_AREA_THRESH 500
 
 struct box{
     int minY, maxY, minX, maxX;
@@ -103,11 +103,15 @@ static vector<Rect> extractBoxesSlow(Mat frame) {
 static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows) {
     Point topLeft = boundingBox.tl();
     Point bottomRight = boundingBox.br();
-    for (int y = topLeft.y; y <= (bottomRight.y - SW_H); y += DY) {
-        for (int x = topLeft.x; x <= (bottomRight.x - SW_W); x += DX) {
+    int y = topLeft.y;
+    do {
+        int x = topLeft.x;
+        do {
             slidingWindows.push_back(Rect(x, y, SW_W, SW_H));
-        }
-    }
+            x += DX;
+        } while(x <= (bottomRight.x - SW_W));
+        y += DY;
+    } while(y <= (bottomRight.y - SW_H));
 }
 
 static vector<Rect> extractContourBoxes(Mat frame) {
