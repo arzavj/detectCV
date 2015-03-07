@@ -19,7 +19,7 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
-    Latte caffeModel(false, "models/train_val.prototxt", "models/bvlc_reference_caffenet.caffemodel");
+    Latte caffeModel(false, "models/deploy.prototxt", "models/bvlc_reference_caffenet.caffemodel");
     string originalVideoName = "data/train.avi";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {

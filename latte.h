@@ -18,7 +18,7 @@ class Latte
 {
 public:
     Latte(bool useGPU, string modelFilename, string weightsFilename);
-    int classify(Mat frame);
+    float classify(Mat frame);
 
 private:
     Net<float> *caffe_net;

@@ -7,10 +7,10 @@ Latte::Latte(bool useGPU, string modelFilename, string weightsFilename)
     caffe_net->CopyTrainedLayersFrom(weightsFilename);
 }
 
-int Latte::classify(Mat frame)
+float Latte::classify(Mat frame)
 {
     Mat resized;
-    cout << "Resizing frame to 32x32" << endl;
+    cout << "Resizing frame to 256x256" << endl;
     resize(frame, resized, Size(227, 227));
     Datum datum;
     CVMatToDatum(resized, &datum);
@@ -22,4 +22,5 @@ int Latte::classify(Mat frame)
     const vector<Blob<float>*>& result = caffe_net->Forward(bottom_vec, &iter_loss);
     const float score = result[1]->cpu_data()[0];
     cout << "Score = " << score << endl;
+    return score;
 }
