@@ -17,9 +17,13 @@ QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
 
 macx {
-    INCLUDEPATH += /usr/local/include
+    INCLUDEPATH += /usr/local/include \
+                   /usr/local/cuda/include \
+                   /usr/local/Cellar/openblas/0.2.13/include
 
-    LIBS += -L/usr/local/lib
+    LIBS += -L/usr/local/lib \
+            -L/usr/local/cuda \
+            -L/usr/lib
 
     LIBS += -lopencv_calib3d \
             -lopencv_contrib \
@@ -33,6 +37,9 @@ macx {
             -lopencv_ml \
             -lopencv_objdetect \
             -lopencv_video
+
+
+    LIBS += -lcaffe
 }
 
 win32 {

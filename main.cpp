@@ -5,7 +5,11 @@
 #include "opencv2/core/core.hpp"
 #include "BGSConvertor.h"
 #include "ObjectExtractor.h"
+#include "caffe/util/io.hpp"
+#include "caffe/caffe.hpp"
+#include "caffe/blob.hpp"
 
+using namespace caffe;
 using namespace cv;
 using namespace std;
 
@@ -14,6 +18,8 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
+    Net<float> caffe_test_net("asfd", TEST);
+
     string originalVideoName = "data/train.avi";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {
