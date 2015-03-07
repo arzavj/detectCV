@@ -1,6 +1,7 @@
 # Input and Output data
 data/*
 models/*
+*.pro.user
 
 # Compiled Object files
 *.slo
