@@ -265,4 +265,6 @@ OTHER_FILES += \
     data/train.avi \
     data/testframe_1.jpg \
     models/bvlc_reference_caffenet.caffemodel \
-    models/train_val.prototxt
+    models/train_val.prototxt \
+    models/cifar10_quick_iter_5000.caffemodel \
+    models/cifar10_quick_train_test.prototxt

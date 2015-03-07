@@ -35,8 +35,8 @@ layer {
     phase: TEST
   }
   transform_param {
-    mirror: false
-    crop_size: 227
+#    mirror: false
+#    crop_size: 227
     mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
@@ -49,8 +49,8 @@ layer {
 #  }
   memory_data_param {
     batch_size: 1
-    height: 256
-    width: 256
+    height: 96
+    width: 96
     channels: 3
   }
 }

@@ -19,7 +19,8 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
-    Latte caffeModel(false, "models/deploy.prototxt", "models/bvlc_reference_caffenet.caffemodel");
+//    Latte caffeModel(false, "models/train_val.prototxt", "models/bvlc_reference_caffenet.caffemodel");
+    Latte caffeModel(false, "models/cifar10_quick_train_test.prototxt", "models/cifar10_quick_iter_5000.caffemodel");
     string originalVideoName = "data/train.avi";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {
@@ -32,6 +33,7 @@ int main(int, char **)
     ObjectExtractor extractor;
     Mat img_mask;
     Mat img_bkgmodel;
+    Scalar WHITE(255, 255, 255);
 
     while(1) {
         inputVideo >> frame;
@@ -41,17 +43,18 @@ int main(int, char **)
 
         bgs->process(frame, img_mask, img_bkgmodel);
 //        imshow("BGS Subtracted Frame", img_mask);
-
+        cout << frame.rows << ", " << frame.cols << endl;
         vector<Rect> boxes = extractor.extractBoxes(img_mask);
         for (Rect box : boxes){
-            rectangle(frame, box, Scalar(255, 255, 255));
-            cout << caffeModel.classify(frame(box)) << endl;
+            rectangle(frame, box, WHITE);
+            int label = caffeModel.classify(frame(box));
+            putText(frame, to_string(label), box.tl(), FONT_HERSHEY_SIMPLEX, 0.5, WHITE);
         }
 
         imshow("BGS Detection", frame);
         printf("Done drawing %d boxes\n", boxes.size());
 
-        if (cvWaitKey(0) >= 0)
+        if (cvWaitKey(100) >= 0)
             break;
     }
     return 0;
