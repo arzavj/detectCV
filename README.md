@@ -26,4 +26,5 @@ Follow http://stanford.edu/~rawatson/lair/mac.html
 <li> Copy folder $CAFFEDIR/include/caffe to /usr/local/include
 <li> Copy folder $CAFFEDIR/build/include/caffe/proto to /usr/local/include/caffe
 <li> brew install openblas
+<li> Copy folder $CAFFEDIR/build/lib/* (.dylib, .a) to /usr/local/lib
 </ul>
