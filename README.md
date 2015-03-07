@@ -19,3 +19,11 @@ An application that detects and labels objects in a video taken from an RGB came
 
 <h3>QT Creator Setup for Mac</h3>
 Follow http://stanford.edu/~rawatson/lair/mac.html
+
+<h3>Importing Caffe into QT Creator<h3>
+<ul>
+<li> $CAFFEDIR/make
+<li> Copy folder $CAFFEDIR/include/caffe to /usr/local/include
+<li> Copy folder $CAFFEDIR/build/include/caffe/proto to /usr/local/include/caffe
+<li> brew install openblas
+</ul>
