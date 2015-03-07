@@ -153,7 +153,8 @@ SOURCES += main.cpp \
     package_bgs/StaticFrameDifferenceBGS.cpp \
     package_bgs/WeightedMovingMeanBGS.cpp \
     package_bgs/WeightedMovingVarianceBGS.cpp \
-    BGSConvertor.cpp
+    BGSConvertor.cpp \
+    latte.cpp
 
 
 HEADERS += \
@@ -251,7 +252,8 @@ HEADERS += \
     package_bgs/StaticFrameDifferenceBGS.h \
     package_bgs/WeightedMovingMeanBGS.h \
     package_bgs/WeightedMovingVarianceBGS.h \
-    BGSConvertor.h
+    BGSConvertor.h \
+    latte.h
 
 OTHER_FILES += \
     testframe_3.jpg \
@@ -261,4 +263,6 @@ OTHER_FILES += \
     package_bgs/pl/LBSP_16bits_dbcross_s3ch.i \
     data/DPEigenbackgroundBGS.avi \
     data/train.avi \
-    data/testframe_1.jpg
+    data/testframe_1.jpg \
+    models/bvlc_reference_caffenet.caffemodel \
+    models/train_val.prototxt

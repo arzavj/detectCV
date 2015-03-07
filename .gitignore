@@ -1,5 +1,6 @@
 # Input and Output data
 data/*
+models/*
 
 # Compiled Object files
 *.slo

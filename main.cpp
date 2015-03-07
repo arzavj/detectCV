@@ -8,6 +8,7 @@
 #include "caffe/util/io.hpp"
 #include "caffe/caffe.hpp"
 #include "caffe/blob.hpp"
+#include "latte.h"
 
 using namespace caffe;
 using namespace cv;
@@ -18,8 +19,7 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
-    Net<float> caffe_test_net("asfd", TEST);
-
+    Latte caffeModel(false, "models/train_val.prototxt", "models/bvlc_reference_caffenet.caffemodel");
     string originalVideoName = "data/train.avi";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {
@@ -32,7 +32,6 @@ int main(int, char **)
     ObjectExtractor extractor;
     Mat img_mask;
     Mat img_bkgmodel;
-    Mat imageGrey;
 
     while(1) {
         inputVideo >> frame;
@@ -46,12 +45,13 @@ int main(int, char **)
         vector<Rect> boxes = extractor.extractBoxes(img_mask);
         for (Rect box : boxes){
             rectangle(frame, box, Scalar(255, 255, 255));
+            cout << caffeModel.classify(frame(box)) << endl;
         }
 
         imshow("BGS Detection", frame);
         printf("Done drawing %d boxes\n", boxes.size());
 
-        if (cvWaitKey(10) >= 0)
+        if (cvWaitKey(0) >= 0)
             break;
     }
     return 0;
