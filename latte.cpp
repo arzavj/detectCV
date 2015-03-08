@@ -11,7 +11,8 @@ float Latte::classify(Mat frame)
 {
     Mat resized;
     cout << "Resizing frame to 256x256" << endl;
-    resize(frame, resized, Size(227, 227));
+    resize(frame, resized, Size(256, 256));
+    cout << "resized_col = " << resized.cols << " resized_row = " << resized.rows << endl;
     Datum datum;
     CVMatToDatum(resized, &datum);
     vector<Datum> datum_vector;

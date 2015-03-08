@@ -15,6 +15,7 @@ TEMPLATE = app
 CONFIG += c++11
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
+DESTDIR = $$PWD
 
 macx {
     INCLUDEPATH += /usr/local/include \
@@ -265,4 +266,8 @@ OTHER_FILES += \
     data/train.avi \
     data/testframe_1.jpg \
     models/bvlc_reference_caffenet.caffemodel \
-    models/train_val.prototxt
+    models/train_val.prototxt \
+    models/bvlc_reference_caffenet.caffemodel \
+    models/deploy.prototxt \
+    models/train_val.prototxt \
+    models/finetuned.caffemodel

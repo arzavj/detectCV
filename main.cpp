@@ -19,7 +19,8 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
-    Latte caffeModel(false, "models/deploy.prototxt", "models/bvlc_reference_caffenet.caffemodel");
+    Latte caffeModel(false, "models/train_val.prototxt", "models/bvlc_reference_caffenet.caffemodel");
+    //Latte caffeModel(false, "models/train_val.prototxt", "models/finetuned.caffemodel");
     string originalVideoName = "data/train.avi";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {
@@ -51,7 +52,7 @@ int main(int, char **)
         imshow("BGS Detection", frame);
         printf("Done drawing %d boxes\n", boxes.size());
 
-        if (cvWaitKey(0) >= 0)
+        if (cvWaitKey(10) >= 0)
             break;
     }
     return 0;
