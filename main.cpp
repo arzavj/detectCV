@@ -19,6 +19,10 @@ void TestBGSVideoConvertor();
 
 int main(int, char **)
 {
+    // Mapping from label number to label text
+    String multiClasses[] = {"bike",  "bus", "car", "dog", "motorbike", "others", "pedestrian", "skater", "stroller"};
+    //String binaryClasses[] = {"pedestrian", "non-pedestrian"};
+
     //Latte caffeModel(false, "models/train_val.prototxt", "models/bvlc_reference_caffenet.caffemodel");
     Latte caffeModel(false, "models/train_val.prototxt", "models/binaryFinetuned80K.caffemodel");
     string originalVideoName = "data/train.avi";
@@ -34,7 +38,8 @@ int main(int, char **)
     Mat img_mask;
     Mat img_bkgmodel;
     Scalar WHITE(255, 255, 255);
-
+    float counts[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    float countTotal = 0;
     while(1) {
         inputVideo >> frame;
         if (!frame.data) {
@@ -49,6 +54,11 @@ int main(int, char **)
             rectangle(frame, box, WHITE);
             int label = caffeModel.classify(frame(box));
             putText(frame, to_string(label), box.tl(), FONT_HERSHEY_SIMPLEX, 0.5, WHITE);
+            counts[label]++;
+            countTotal++;
+            for (int count_i = 0; count_i < sizeof(counts)/sizeof(counts[0]); count_i++) {
+                cout << "label " << count_i << " % = " << counts[count_i] / countTotal << endl;
+            }
         }
 
         imshow("BGS Detection", frame);
