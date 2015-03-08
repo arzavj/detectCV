@@ -18,7 +18,9 @@ class Latte
 {
 public:
     Latte(bool useGPU, string modelFilename, string weightsFilename);
-    float classify(Mat frame);
+    vector<float> getScores(Mat frame);
+    pair<float, int> getMaxScoreAndLabel(Mat frame);
+    vector<pair<float, int> > getScoresAndLabels(Mat frame, vector<Rect> windows);
 
 private:
     Net<float> *caffe_net;
