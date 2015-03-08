@@ -276,5 +276,7 @@ OTHER_FILES += \
     models/multiclass_train_val.prototxt \
     data/outdoor.mov \
     data/bike.mov \
-    data/skating.mov
+    data/skating.mov \
+    models/9classFinetune100000.caffemodel \
+    models/binaryFinetune100000.caffemodel
 
