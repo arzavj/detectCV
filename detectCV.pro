@@ -155,7 +155,8 @@ SOURCES += main.cpp \
     package_bgs/WeightedMovingMeanBGS.cpp \
     package_bgs/WeightedMovingVarianceBGS.cpp \
     BGSConvertor.cpp \
-    latte.cpp
+    latte.cpp \
+    nonmaxsuppression.cpp
 
 
 HEADERS += \
@@ -254,7 +255,8 @@ HEADERS += \
     package_bgs/WeightedMovingMeanBGS.h \
     package_bgs/WeightedMovingVarianceBGS.h \
     BGSConvertor.h \
-    latte.h
+    latte.h \
+    nonmaxsuppression.h
 
 OTHER_FILES += \
     testframe_3.jpg \

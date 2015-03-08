@@ -31,3 +31,6 @@ models/*
 *.exe
 *.out
 *.app
+
+# Binary Files
+detectCV

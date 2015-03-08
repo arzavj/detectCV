@@ -9,6 +9,7 @@
 #include "caffe/caffe.hpp"
 #include "caffe/blob.hpp"
 #include "latte.h"
+#include "nonmaxsuppression.h"
 
 using namespace caffe;
 using namespace cv;
@@ -61,6 +62,7 @@ int main(int, char **)
     Mat img_mask;
     Mat img_bkgmodel;
     Scalar WHITE(255, 255, 255);
+    NonMaxSuppression nms;
     float counts[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     float countTotal = 0;
     while(1) {
@@ -73,10 +75,13 @@ int main(int, char **)
 //        imshow("BGS Subtracted Frame", img_mask);
         //imwrite("bgsImage.jpg", img_mask );
         cout << frame.rows << ", " << frame.cols << endl;
-        vector<Rect> boxes = extractor.extractBoxes(img_mask);
-        for (Rect box : boxes){
+        vector<Rect> windows = extractor.extractBoxes(img_mask);
+        vector<pair<float, int>> scoreLabels = caffeModel.getScoresAndLabels(frame, windows);
+        vector<tuple<Rect, float, int>> boxes = nms.suppress(windows, scoreLabels);
+        for (tuple<Rect, float, int> boxTuple : boxes) {
+            int label = get<2>(boxTuple);
+            Rect& box = get<0>(boxTuple);
             rectangle(frame, box, WHITE);
-            int label = caffeModel.classify(frame(box));
             putText(frame, classes[label], box.tl(), FONT_HERSHEY_SIMPLEX, 0.5,  Scalar( 0, 0, 255 ));
             counts[label]++;
             countTotal++;

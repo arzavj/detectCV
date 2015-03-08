@@ -7,7 +7,30 @@ Latte::Latte(bool useGPU, string modelFilename, string weightsFilename)
     caffe_net->CopyTrainedLayersFrom(weightsFilename);
 }
 
-float Latte::classify(Mat frame)
+vector<pair<float, int> > Latte::getScoresAndLabels(Mat originalFrame, vector<Rect> windows)
+{
+    vector<pair<float, int> > scoreLabels(windows.size());
+    for (int i = 0; i< windows.size(); i++) {
+        scoreLabels[i] = getMaxScoreAndLabel(originalFrame(windows[i]));
+    }
+    return scoreLabels;
+}
+
+pair<float, int> Latte::getMaxScoreAndLabel(Mat frame)
+{
+    vector<float> scores = getScores(frame);
+    float maxScore = 0.0;
+    int mostLikelyLabel = -1;
+    for (int label = 0; label < scores.size(); label++) {
+        if (scores[label] > maxScore) {
+            mostLikelyLabel = label;
+            maxScore = scores[label];
+        }
+    }
+    return make_pair(maxScore, mostLikelyLabel);
+}
+
+vector<float> Latte::getScores(Mat frame)
 {
     Mat resized;
     cout << "Resizing frame to 256x256" << endl;
@@ -21,7 +44,10 @@ float Latte::classify(Mat frame)
     vector<Blob<float>* > bottom_vec;
     float iter_loss;
     const vector<Blob<float>*>& result = caffe_net->Forward(bottom_vec, &iter_loss);
-    const float label = result[1]->cpu_data()[0];
-    cout << "Label = " << label << endl;
-    return label;
+    const float* result_vec = result[1]->cpu_data();
+    vector<float> scores(result[1]->count());
+    for (int k = 0; k < scores.size(); ++k) {
+        scores[k] = result_vec[k];
+    }
+    return scores;
 }
