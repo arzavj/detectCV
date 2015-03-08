@@ -39,6 +39,7 @@ int main(int, char **)
     Mat img_mask;
     Mat img_bkgmodel;
     Scalar WHITE(255, 255, 255);
+    NonMaxSuppression nms();
     float counts[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     float countTotal = 0;
     while(1) {
@@ -50,7 +51,8 @@ int main(int, char **)
         bgs->process(frame, img_mask, img_bkgmodel);
 //        imshow("BGS Subtracted Frame", img_mask);
         cout << frame.rows << ", " << frame.cols << endl;
-        vector<Rect> boxes = extractor.extractBoxes(img_mask);
+        vector<Rect> windows = extractor.extractBoxes(img_mask);
+        vector<Rect> boxes = nms.suppress(windows);
         for (Rect box : boxes){
             rectangle(frame, box, WHITE);
             int label = caffeModel.classify(frame(box));
