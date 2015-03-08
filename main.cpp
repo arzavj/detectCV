@@ -20,12 +20,12 @@ void TestBGSVideoConvertor();
 int main(int, char **)
 {
     // Mapping from label number to label text
-    //String classes[] = {"bike",  "bus", "car", "dog", "motorbike", "others", "pedestrian", "skater", "stroller"};
-    String classes[] = {"pedestrian", "non-pedestrian"};
+    String classes[] = {"bike",  "bus", "car", "dog", "motorbike", "others", "pedestrian", "skater", "stroller"};
+    //String classes[] = {"pedestrian", "non-pedestrian"};
 
-    //Latte caffeModel(false, "models/multiclass_train_val.prototxt", "models/multiclassFinetuned80K.caffemodel");
-    Latte caffeModel(false, "models/binary_train_val.prototxt", "models/binaryFinetuned80K.caffemodel");
-    string originalVideoName = "data/bike.mov";
+    Latte caffeModel(false, "models/multiclass_train_val.prototxt", "models/9classFinetune100000.caffemodel");
+    //Latte caffeModel(false, "models/binary_train_val.prototxt", "models/binaryFinetune100000.caffemodel");
+    string originalVideoName = "data/train.avi";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {
         std::cout << "input video not opened\n";
