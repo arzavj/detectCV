@@ -20,19 +20,20 @@ void TestBGSVideoConvertor();
 int main(int, char **)
 {
     // Mapping from label number to label text
-    String multiClasses[] = {"bike",  "bus", "car", "dog", "motorbike", "others", "pedestrian", "skater", "stroller"};
-    //String binaryClasses[] = {"pedestrian", "non-pedestrian"};
+    //String classes[] = {"bike",  "bus", "car", "dog", "motorbike", "others", "pedestrian", "skater", "stroller"};
+    String classes[] = {"pedestrian", "non-pedestrian"};
 
-    //Latte caffeModel(false, "models/train_val.prototxt", "models/bvlc_reference_caffenet.caffemodel");
-    Latte caffeModel(false, "models/train_val.prototxt", "models/binaryFinetuned80K.caffemodel");
-    string originalVideoName = "data/train.avi";
+    //Latte caffeModel(false, "models/multiclass_train_val.prototxt", "models/multiclassFinetuned80K.caffemodel");
+    Latte caffeModel(false, "models/binary_train_val.prototxt", "models/binaryFinetuned80K.caffemodel");
+    string originalVideoName = "data/bike.mov";
     VideoCapture inputVideo(originalVideoName);
     if (!inputVideo.isOpened()) {
         std::cout << "input video not opened\n";
         exit(1);
     }
 
-    IBGS *bgs = new DPEigenbackgroundBGS();
+    //IBGS *bgs = new DPEigenbackgroundBGS();
+    IBGS *bgs = new DPZivkovicAGMMBGS();
     Mat frame;
     ObjectExtractor extractor;
     Mat img_mask;
@@ -53,7 +54,7 @@ int main(int, char **)
         for (Rect box : boxes){
             rectangle(frame, box, WHITE);
             int label = caffeModel.classify(frame(box));
-            putText(frame, to_string(label), box.tl(), FONT_HERSHEY_SIMPLEX, 0.5, WHITE);
+            putText(frame, classes[label], box.tl(), FONT_HERSHEY_SIMPLEX, 0.5,  Scalar( 0, 0, 255 ));
             counts[label]++;
             countTotal++;
             for (int count_i = 0; count_i < sizeof(counts)/sizeof(counts[0]); count_i++) {

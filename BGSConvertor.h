@@ -19,6 +19,7 @@
 #include "package_bgs/AdaptiveBackgroundLearning.h"
 #include "package_bgs/AdaptiveSelectiveBackgroundLearning.h"
 #include "package_bgs/dp/DPEigenbackgroundBGS.h"
+#include "package_bgs/dp/DPZivkovicAGMMBGS.h"
 
 using namespace cv;
 

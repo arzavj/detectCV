@@ -270,7 +270,11 @@ OTHER_FILES += \
     models/bvlc_reference_caffenet.caffemodel \
     models/deploy.prototxt \
     models/train_val.prototxt \
-    models/finetuned.caffemodel \
     models/binaryFinetuned80K.caffemodel \
-    models/binary_train_val.prototxt
+    models/binary_train_val.prototxt \
+    models/multiclassFinetuned80K.caffemodel \
+    models/multiclass_train_val.prototxt \
+    data/outdoor.mov \
+    data/bike.mov \
+    data/skating.mov
 
