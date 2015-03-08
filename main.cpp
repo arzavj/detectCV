@@ -33,6 +33,7 @@ int main(int, char **)
     ObjectExtractor extractor;
     Mat img_mask;
     Mat img_bkgmodel;
+    Scalar WHITE(255, 255, 255);
 
     while(1) {
         inputVideo >> frame;
@@ -42,11 +43,12 @@ int main(int, char **)
 
         bgs->process(frame, img_mask, img_bkgmodel);
 //        imshow("BGS Subtracted Frame", img_mask);
-
+        cout << frame.rows << ", " << frame.cols << endl;
         vector<Rect> boxes = extractor.extractBoxes(img_mask);
         for (Rect box : boxes){
-            rectangle(frame, box, Scalar(255, 255, 255));
-            cout << caffeModel.classify(frame(box)) << endl;
+            rectangle(frame, box, WHITE);
+            int label = caffeModel.classify(frame(box));
+            putText(frame, to_string(label), box.tl(), FONT_HERSHEY_SIMPLEX, 0.5, WHITE);
         }
 
         imshow("BGS Detection", frame);

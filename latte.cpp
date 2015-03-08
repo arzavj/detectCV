@@ -21,7 +21,7 @@ float Latte::classify(Mat frame)
     vector<Blob<float>* > bottom_vec;
     float iter_loss;
     const vector<Blob<float>*>& result = caffe_net->Forward(bottom_vec, &iter_loss);
-    const float score = result[1]->cpu_data()[0];
-    cout << "Score = " << score << endl;
-    return score;
+    const float label = result[1]->cpu_data()[0];
+    cout << "Label = " << label << endl;
+    return label;
 }

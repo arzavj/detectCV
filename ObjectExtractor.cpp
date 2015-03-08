@@ -100,14 +100,16 @@ static vector<Rect> extractBoxesSlow(Mat frame) {
     return rects;
 }
 
-static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows) {
+static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows, Size frameSize) {
     Point topLeft = boundingBox.tl();
     Point bottomRight = boundingBox.br();
     int y = topLeft.y;
     do {
         int x = topLeft.x;
         do {
-            slidingWindows.push_back(Rect(x, y, SW_W, SW_H));
+            if ((x + SW_W) < frameSize.width && (y + SW_H) < frameSize.height) {
+                slidingWindows.push_back(Rect(x, y, SW_W, SW_H));
+            }
             x += DX;
         } while(x <= (bottomRight.x - SW_W));
         y += DY;
@@ -151,7 +153,7 @@ static vector<Rect> extractContourBoxes(Mat frame) {
 //        sprintf(text, "%d x %d", s.width, s.height);
 //        putText(morphedFrame, text, boundingBox.tl(), FONT_HERSHEY_SIMPLEX, 0.1, Scalar(255, 255, 255));
         if (boundingBox.area() > BOUNDING_BOX_AREA_THRESH) {
-            getSlidingWindows(boundingBox, slidingWindows);
+            getSlidingWindows(boundingBox, slidingWindows, frame.size());
         }
     }
 

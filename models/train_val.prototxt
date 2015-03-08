@@ -36,7 +36,11 @@ layer {
   }
   transform_param {
 #    mirror: false
+<<<<<<< HEAD
     crop_size: 227
+=======
+#    crop_size: 227
+>>>>>>> 82003fa22ed6fbd3382c0d48caf58ca5e259777c
     mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
@@ -49,8 +53,13 @@ layer {
 #  }
   memory_data_param {
     batch_size: 1
+<<<<<<< HEAD
     height: 227
     width: 227
+=======
+    height: 96
+    width: 96
+>>>>>>> 82003fa22ed6fbd3382c0d48caf58ca5e259777c
     channels: 3
   }
 }

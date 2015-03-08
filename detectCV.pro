@@ -267,7 +267,12 @@ OTHER_FILES += \
     data/testframe_1.jpg \
     models/bvlc_reference_caffenet.caffemodel \
     models/train_val.prototxt \
+<<<<<<< HEAD
     models/bvlc_reference_caffenet.caffemodel \
     models/deploy.prototxt \
     models/train_val.prototxt \
     models/finetuned.caffemodel
+=======
+    models/cifar10_quick_iter_5000.caffemodel \
+    models/cifar10_quick_train_test.prototxt
+>>>>>>> 82003fa22ed6fbd3382c0d48caf58ca5e259777c
