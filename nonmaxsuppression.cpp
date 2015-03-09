@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <numeric>
 
-#define OVERLAP_THRESH 0.5
+#define OVERLAP_THRESH 0.3
 
 /*
  * Obtained from

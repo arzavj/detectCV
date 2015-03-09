@@ -383,12 +383,12 @@ layer {
   }
 }
 
-layer {
-    name: "output"
-    type: "ArgMax"
-    bottom: "fc8_flickr"
-    top: "output"
-}
+#layer {
+#    name: "output"
+#    type: "ArgMax"
+#    bottom: "fc8_flickr"
+#    top: "output"
+#}
 
 #layer {
 #  name: "loss"
@@ -403,3 +403,9 @@ layer {
 #  bottom: "label"
 #  top: "accuracy"
 #}
+layer {
+  name: "prob"
+  type: "Softmax"
+  bottom: "fc8_flickr"
+  top: "prob"
+}

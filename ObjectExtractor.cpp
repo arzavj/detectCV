@@ -2,8 +2,10 @@
 #include <math.h>
 #include <unordered_set>
 
-#define SW_H 200
-#define SW_W 120
+#define SW_H 200 // bike
+#define SW_W 120 // bike
+//#define SW_H 150 // train station
+//#define SW_W 80  // train station
 #define SW_A SW_H*SW_W
 #define THRESH 0.1
 #define THRESH_NUMPX (int)(THRESH*SW_A)

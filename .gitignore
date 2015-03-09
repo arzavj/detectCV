@@ -2,6 +2,12 @@
 data/*
 models/*
 *.pro.user
+*.avi
+withoutLabel/*
+withLabel/*
+bgsOutput/*
+nonMaxOutput/*
+originalOutput/*
 
 # Compiled Object files
 *.slo
