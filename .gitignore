@@ -2,6 +2,12 @@
 data/*
 models/*
 *.pro.user
+*.avi
+withoutLabel/*
+withLabel/*
+bgsOutput/*
+nonMaxOutput/*
+originalOutput/*
 
 # Compiled Object files
 *.slo
@@ -31,3 +37,6 @@ models/*
 *.exe
 *.out
 *.app
+
+# Binary Files
+detectCV
