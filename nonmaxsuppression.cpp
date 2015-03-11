@@ -34,7 +34,7 @@ NonMaxSuppression::NonMaxSuppression()
 }
 
 vector<tuple<Rect, float, int>> NonMaxSuppression::suppress(vector<Rect> windows,
-                                                                         vector<pair<float, int>> scoreLabels)
+                                                            vector<pair<float, int>> scoreLabels)
 {
     vector<int> sortedIndices = sort_permutation(scoreLabels);
     vector<Rect> sortedWindows = apply_permutation(windows, sortedIndices);
