@@ -282,5 +282,7 @@ OTHER_FILES += \
     models/binaryFinetune100000.caffemodel \
     models/9classFinetune100000.caffemodel \
     models/binaryFinetune100000.caffemodel \
-    models/multiclassLessTrained30000.caffemodel
+    models/multiclassLessTrained30000.caffemodel \
+    models/equalTrainingMultiClass100000.caffemodel \
+    data/stanford.mov
 

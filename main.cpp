@@ -10,6 +10,7 @@
 #include "caffe/blob.hpp"
 #include "latte.h"
 #include "nonmaxsuppression.h"
+#define WRITE_TO_FILE
 
 using namespace caffe;
 using namespace cv;
@@ -68,15 +69,18 @@ int main(int, char **)
     float countTotal = 0;
     int count = 0;
     while(1) {
-        inputVideo >> frame; 
+        inputVideo >> frame;
         if (!frame.data) {
             break;
         }
-
+#ifndef WRITE_TO_FILE
         imwrite( "originalOutput/image" + to_string(count) + ".jpg", frame);
-
+#endif
         bgs->process(frame, img_mask, img_bkgmodel);
+
+#ifndef WRITE_TO_FILE
         imwrite( "bgsOutput/image" + to_string(count) + ".jpg", img_mask);
+#endif
 
         cout << frame.rows << ", " << frame.cols << endl;
         vector<Rect> windows = extractor.extractBoxes(img_mask);
@@ -84,14 +88,18 @@ int main(int, char **)
         for (Rect w : windows) {
             rectangle(windowWithoutLabel, w, WHITE);
         }
+#ifndef WRITE_TO_FILE
         imwrite("withoutLabel/image" + to_string(count) + ".jpg", windowWithoutLabel);
+#endif
         vector<pair<float, int>> scoreLabels = caffeModel.getScoresAndLabels(frame, windows);
         for (int i = 0; i < scoreLabels.size(); i++) {
             Rect& w = windows[i];
             int label = scoreLabels[i].second;
             putText(windowWithoutLabel, classes[label], w.tl(), FONT_HERSHEY_SIMPLEX, 0.5, RED);
         }
+#ifndef WRITE_TO_FILE
         imwrite("withLabel/image" + to_string(count) + ".jpg", windowWithoutLabel);
+#endif
         vector<tuple<Rect, float, int>> boxes = nms.suppress(windows, scoreLabels);
         for (tuple<Rect, float, int> boxTuple : boxes) {
             int label = get<2>(boxTuple);
@@ -105,10 +113,11 @@ int main(int, char **)
                 cout << "label " << count_i << " % = " << counts[count_i] / countTotal << endl;
             }
         }
-
         imshow("BGS Detection", frame);
         printf("Done drawing %d boxes\n", boxes.size());
+#ifndef WRITE_TO_FILE
         imwrite( "nonMaxOutput/image" + to_string(count) + ".jpg", frame);
+#endif
         count++;
 
         //outputVideo.write(frame);
