@@ -2,10 +2,10 @@
 #include <math.h>
 #include <unordered_set>
 
-#define SW_H 200 // bike
-#define SW_W 120 // bike
-//#define SW_H 150 // train station
-//#define SW_W 80  // train station
+//#define SW_H 200 // bike
+//#define SW_W 120 // bike
+#define SW_H 150 // train station
+#define SW_W 80  // train station
 #define SW_A SW_H*SW_W
 #define THRESH 0.1
 #define THRESH_NUMPX (int)(THRESH*SW_A)
@@ -105,19 +105,21 @@ static vector<Rect> extractBoxesSlow(Mat frame) {
 static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows, Size frameSize) {
     Point topLeft = boundingBox.tl();
     Point bottomRight = boundingBox.br();
-//    for (double scale = 0.4; scale <= 1.0; scale += 0.2) {
+    for (double scale = 0.4; scale <= 1.0; scale += 0.2) {
+        int width = scale * SW_W;
+        int height = scale * SW_H;
         int y = topLeft.y;
         do {
             int x = topLeft.x;
             do {
-                if ((x + SW_W) < frameSize.width && (y + SW_H) < frameSize.height) {
-                    slidingWindows.push_back(Rect(x, y, SW_W, SW_H));
+                if ((x + width) < frameSize.width && (y + height) < frameSize.height) {
+                    slidingWindows.push_back(Rect(x, y, width, height));
                 }
                 x += DX;
-            } while(x <= (bottomRight.x - SW_W));
+            } while(x <= (bottomRight.x - width));
             y += DY;
-        } while(y <= (bottomRight.y - SW_H));
-//    }
+        } while(y <= (bottomRight.y - height));
+    }
 }
 
 static vector<Rect> extractContourBoxes(Mat frame) {
