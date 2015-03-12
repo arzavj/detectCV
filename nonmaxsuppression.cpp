@@ -3,6 +3,7 @@
 #include <numeric>
 
 #define OVERLAP_THRESH 0.3
+#define SCORE_THRESH 0.8
 
 /*
  * Obtained from
@@ -42,8 +43,10 @@ vector<tuple<Rect, float, int>> NonMaxSuppression::suppress(vector<Rect> windows
     vector<tuple<Rect, float, int>> result;
 
     for (int i = 0; i < sortedWindows.size(); i++) {
-        if (!keepWindows[i]) continue;
         int sortedIdx = sortedIndices[i];
+        if (!keepWindows[i] || scoreLabels[sortedIdx].first < SCORE_THRESH) {
+            continue;
+        }
         for (int j = i + 1; j < sortedWindows.size(); j++) {
             if (getOverlap(sortedWindows[i], sortedWindows[j]) > OVERLAP_THRESH) {
                 keepWindows[j] = false;

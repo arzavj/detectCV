@@ -105,17 +105,19 @@ static vector<Rect> extractBoxesSlow(Mat frame) {
 static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows, Size frameSize) {
     Point topLeft = boundingBox.tl();
     Point bottomRight = boundingBox.br();
-    int y = topLeft.y;
-    do {
-        int x = topLeft.x;
+//    for (double scale = 0.4; scale <= 1.0; scale += 0.2) {
+        int y = topLeft.y;
         do {
-            if ((x + SW_W) < frameSize.width && (y + SW_H) < frameSize.height) {
-                slidingWindows.push_back(Rect(x, y, SW_W, SW_H));
-            }
-            x += DX;
-        } while(x <= (bottomRight.x - SW_W));
-        y += DY;
-    } while(y <= (bottomRight.y - SW_H));
+            int x = topLeft.x;
+            do {
+                if ((x + SW_W) < frameSize.width && (y + SW_H) < frameSize.height) {
+                    slidingWindows.push_back(Rect(x, y, SW_W, SW_H));
+                }
+                x += DX;
+            } while(x <= (bottomRight.x - SW_W));
+            y += DY;
+        } while(y <= (bottomRight.y - SW_H));
+//    }
 }
 
 static vector<Rect> extractContourBoxes(Mat frame) {
