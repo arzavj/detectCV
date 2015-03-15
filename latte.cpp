@@ -21,21 +21,22 @@ pair<float, int> Latte::getMaxScoreAndLabel(Mat frame)
     vector<float> scores = getScores(frame);
     float maxScore = 0.0;
     int mostLikelyLabel = -1;
+    cout << "Window of size = " << frame.size().width << ", " << frame.size().height << endl;
     for (int label = 0; label < scores.size(); label++) {
         if (scores[label] > maxScore) {
             mostLikelyLabel = label;
             maxScore = scores[label];
         }
     }
+    cout << "Label = " << mostLikelyLabel << " Score = " << maxScore << endl;
     return make_pair(maxScore, mostLikelyLabel);
 }
 
 vector<float> Latte::getScores(Mat frame)
 {
     Mat resized;
-    cout << "Resizing frame to 256x256" << endl;
     resize(frame, resized, Size(256, 256));
-    cout << "resized_col = " << resized.cols << " resized_row = " << resized.rows << endl;
+//    cout << "resized_col = " << resized.cols << " resized_row = " << resized.rows << endl;
     Datum datum;
     CVMatToDatum(resized, &datum);
     vector<Datum> datum_vector;

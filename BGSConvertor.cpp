@@ -42,6 +42,11 @@ BGSConvertor::BGSConvertor(std::string bgs_class) {
         return;
     }
     
+    if (bgs_class.compare("DPZivkovicAGMMBGS") == 0) {
+        bgs = new DPZivkovicAGMMBGS();
+        return;
+    }
+
     std::cout << "No matching BGS Type specified in bgs_convert constructor\n";
 }
 
@@ -62,9 +67,10 @@ VideoCapture BGSConvertor::convert_video(VideoCapture capture, std::string store
     double dHeight = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
     int fps = capture.get(CV_CAP_PROP_FPS);
     Size frameSize(static_cast<int>(dWidth), static_cast<int>(dHeight));
+    int fourcc = static_cast<int>(capture.get(CV_CAP_PROP_FOURCC));
     
     // Create output video with same properties as input
-    VideoWriter output_cap(store_path, CV_FOURCC('I', 'Y', 'U', 'V'), fps, frameSize, true);
+    VideoWriter output_cap(store_path, CV_FOURCC('m', 'p', '4', 'v'), fps, frameSize, true);
     if(!output_cap.isOpened()) { // check if we succeeded
         printf("output video not opened\n");
         return NULL;
