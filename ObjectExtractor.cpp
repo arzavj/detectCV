@@ -11,7 +11,20 @@
 #define THRESH_NUMPX (int)(THRESH*SW_A)
 #define DX 30
 #define DY 10
-#define BOUNDING_BOX_AREA_THRESH 500
+#define BOUNDING_BOX_AREA_THRESH 1600
+#define NUM_WINDOW_SIZES 5
+
+struct SW {
+   static const pair<int, int> SIZES[NUM_WINDOW_SIZES];
+};
+
+const pair<int, int> SW::SIZES[NUM_WINDOW_SIZES] = {
+    make_pair(40, 75), // small pedestrian
+    make_pair(80, 150), // big pedestrian
+    make_pair(170, 170), // bike
+    make_pair(80, 180), // skateboarder
+    make_pair(300, 100)  // car
+};
 
 struct box{
     int minY, maxY, minX, maxX;
@@ -105,9 +118,9 @@ static vector<Rect> extractBoxesSlow(Mat frame) {
 static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows, Size frameSize) {
     Point topLeft = boundingBox.tl();
     Point bottomRight = boundingBox.br();
-    for (double scale = 0.4; scale <= 1.0; scale += 0.2) {
-        int width = scale * SW_W;
-        int height = scale * SW_H;
+    for (int i = 0; i < NUM_WINDOW_SIZES; i++) {
+        int width = SW::SIZES[i].first;
+        int height = SW::SIZES[i].second;
         int y = topLeft.y;
         do {
             int x = topLeft.x;
@@ -160,9 +173,11 @@ static vector<Rect> extractContourBoxes(Mat frame) {
 //        putText(morphedFrame, text, boundingBox.tl(), FONT_HERSHEY_SIMPLEX, 0.1, Scalar(255, 255, 255));
         if (boundingBox.area() > BOUNDING_BOX_AREA_THRESH) {
             getSlidingWindows(boundingBox, slidingWindows, frame.size());
+            rectangle(frame, boundingBox, Scalar(255, 255, 255));
+            cout << "BB of size = " << boundingBox.size().width << ", " << boundingBox.size().height << endl;
         }
     }
-
+    imshow("BGS Frame", frame);
     return slidingWindows;
 }
 

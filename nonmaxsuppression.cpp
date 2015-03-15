@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <numeric>
 
-#define OVERLAP_THRESH 0.3
+#define OVERLAP_THRESH 0.5
 #define SCORE_THRESH 0.8
 
 /*
@@ -27,7 +27,9 @@ static vector<Rect> apply_permutation(vector<Rect> const& windows, vector<int> c
 
 static double getOverlap(Rect w1, Rect w2)
 {
-    return ((double) (w1 & w2).area()) / w1.area(); //TODO: pick smaller or bigger area?
+    int intersectionArea = (w1 & w2).area();
+    int unionArea = w1.area() + w2.area() - intersectionArea;
+    return ((double) intersectionArea) / unionArea; //TODO: pick smaller or bigger area?
 }
 
 NonMaxSuppression::NonMaxSuppression()
