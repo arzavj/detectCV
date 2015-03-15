@@ -2,16 +2,16 @@
 #include <math.h>
 #include <unordered_set>
 
-//#define SW_H 200 // bike
-//#define SW_W 120 // bike
-#define SW_H 150 // train station
-#define SW_W 80  // train station
+#define SW_H 200 // bike
+#define SW_W 120 // bike
+//#define SW_H 150 // train station
+//#define SW_W 80  // train station
 #define SW_A SW_H*SW_W
 #define THRESH 0.1
 #define THRESH_NUMPX (int)(THRESH*SW_A)
 #define DX 30
 #define DY 10
-#define BOUNDING_BOX_AREA_THRESH 500
+#define BOUNDING_BOX_AREA_THRESH 5000
 
 struct box{
     int minY, maxY, minX, maxX;
@@ -105,7 +105,7 @@ static vector<Rect> extractBoxesSlow(Mat frame) {
 static void getSlidingWindows(Rect boundingBox, vector<Rect>& slidingWindows, Size frameSize) {
     Point topLeft = boundingBox.tl();
     Point bottomRight = boundingBox.br();
-    for (double scale = 0.4; scale <= 1.0; scale += 0.2) {
+    for (double scale = 1.0; scale <= 1.0; scale += 0.2) {
         int width = scale * SW_W;
         int height = scale * SW_H;
         int y = topLeft.y;
@@ -159,7 +159,8 @@ static vector<Rect> extractContourBoxes(Mat frame) {
 //        sprintf(text, "%d x %d", s.width, s.height);
 //        putText(morphedFrame, text, boundingBox.tl(), FONT_HERSHEY_SIMPLEX, 0.1, Scalar(255, 255, 255));
         if (boundingBox.area() > BOUNDING_BOX_AREA_THRESH) {
-            getSlidingWindows(boundingBox, slidingWindows, frame.size());
+            //getSlidingWindows(boundingBox, slidingWindows, frame.size());
+            slidingWindows.push_back(boundingBox);
         }
     }
 

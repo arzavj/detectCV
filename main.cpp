@@ -10,7 +10,7 @@
 #include "caffe/blob.hpp"
 #include "latte.h"
 #include "nonmaxsuppression.h"
-#define WRITE_TO_FILE
+//#define WRITE_TO_FILE
 
 using namespace caffe;
 using namespace cv;
@@ -20,9 +20,9 @@ using namespace std;
 void TestBGSVideoConvertor();
 
 const int MAX_N_CLASSES = 9;
-String CLASS_LIST[2][MAX_N_CLASSES] = {{"bike",  "bus", "car", "dog", "motorbike", "others", "pedestrian", "skater", "stroller"}, {"pedestrian", "non-pedestrian"}};
+String CLASS_LIST[2][MAX_N_CLASSES] = {{"bike",  "bus", "car", "dog", "motorbike", "others", "pedestrian", "skateboard", "stroller"}, {"pedestrian", "non-pedestrian"}};
 String PROTOTXT_LIST[2] = {"models/multiclass_train_val.prototxt", "models/binary_train_val.prototxt"};
-String MODEL_LIST[2] = {"models/9classFinetune100000.caffemodel", "models/binaryFinetune100000.caffemodel"};
+String MODEL_LIST[2] = {"models/equalTrainingMultiClass100000.caffemodel", "models/binaryFinetune100000.caffemodel"};
 
 int main(int, char **)
 {
@@ -42,21 +42,23 @@ int main(int, char **)
     }
 
     // Create output video with same properties as input
-    String video_store_path = "streetZivkovicLargeSW.avi";
+    String video_store_path = "campusBoundingBox5000pixelMin2.avi";
     // Intrinsic properties of input
     double dWidth = inputVideo.get(CV_CAP_PROP_FRAME_WIDTH);
     double dHeight = inputVideo.get(CV_CAP_PROP_FRAME_HEIGHT);
     int fps = inputVideo.get(CV_CAP_PROP_FPS);
     Size frameSize(static_cast<int>(dWidth), static_cast<int>(dHeight));
 
-    /*VideoWriter outputVideo(video_store_path, CV_FOURCC('m', 'p', '4', 'v'), fps, frameSize, true);
+    /*
+    VideoWriter outputVideo(video_store_path, CV_FOURCC('m', 'p', '4', 'v'), fps, frameSize, true);
     if(!outputVideo.isOpened()) { // check if we succeeded
         printf("output video not opened\n");
         return NULL;
-    }*/
-
+    }
+*/
     //IBGS *bgs = new DPEigenbackgroundBGS();
-    IBGS *bgs = new DPZivkovicAGMMBGS();
+    //IBGS *bgs = new DPZivkovicAGMMBGS();
+    IBGS *bgs = new FrameDifferenceBGS();
     Mat frame;
     ObjectExtractor extractor;
     Mat img_mask;
@@ -73,14 +75,14 @@ int main(int, char **)
         if (!frame.data) {
             break;
         }
-#ifndef WRITE_TO_FILE
+#ifdef WRITE_TO_FILE
         imwrite( "originalOutput/image" + to_string(count) + ".jpg", frame);
 #endif
         bgs->process(frame, img_mask, img_bkgmodel);
 
-#ifndef WRITE_TO_FILE
-        imwrite( "bgsOutput/image" + to_string(count) + ".jpg", img_mask);
-#endif
+//#ifdef WRITE_TO_FILE
+        imwrite( "bgsOutput/DifImage" + to_string(count) + ".jpg", img_mask);
+//#endif
 
         cout << frame.rows << ", " << frame.cols << endl;
         vector<Rect> windows = extractor.extractBoxes(img_mask);
@@ -88,7 +90,7 @@ int main(int, char **)
         for (Rect w : windows) {
             rectangle(windowWithoutLabel, w, WHITE);
         }
-#ifndef WRITE_TO_FILE
+#ifdef WRITE_TO_FILE
         imwrite("withoutLabel/image" + to_string(count) + ".jpg", windowWithoutLabel);
 #endif
         vector<pair<float, int>> scoreLabels = caffeModel.getScoresAndLabels(frame, windows);
@@ -97,7 +99,7 @@ int main(int, char **)
             int label = scoreLabels[i].second;
             putText(windowWithoutLabel, classes[label], w.tl(), FONT_HERSHEY_SIMPLEX, 0.5, RED);
         }
-#ifndef WRITE_TO_FILE
+#ifdef WRITE_TO_FILE
         imwrite("withLabel/image" + to_string(count) + ".jpg", windowWithoutLabel);
 #endif
         vector<tuple<Rect, float, int>> boxes = nms.suppress(windows, scoreLabels);
@@ -115,7 +117,7 @@ int main(int, char **)
         }
         imshow("BGS Detection", frame);
         printf("Done drawing %d boxes\n", boxes.size());
-#ifndef WRITE_TO_FILE
+#ifdef WRITE_TO_FILE
         imwrite( "nonMaxOutput/image" + to_string(count) + ".jpg", frame);
 #endif
         count++;
