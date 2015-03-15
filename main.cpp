@@ -95,6 +95,7 @@ int main(int, char **)
         for (Rect w : windows) {
             rectangle(windowWithoutLabel, w, WHITE);
         }
+#endif
 
 #ifdef WRITE_TO_FILE
         imwrite("withoutLabel/image" + to_string(count) + ".jpg", windowWithoutLabel);
@@ -106,6 +107,7 @@ int main(int, char **)
             int label = scoreLabels[i].second;
             putText(windowWithoutLabel, classes[label], w.tl(), FONT_HERSHEY_SIMPLEX, 0.5, RED);
         }
+#endif
 
 #ifdef WRITE_TO_FILE
         imwrite("withLabel/image" + to_string(count) + ".jpg", windowWithoutLabel);
