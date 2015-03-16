@@ -10,7 +10,7 @@ f_train = open('train_listfile.txt', 'wb')
 f_test = open('test_listfile.txt', 'wb')
 f_val = open('val_listfile.txt', 'wb')
 
-labels = ['bike', 'bus', 'car', 'dog', 'motorbike', 'others', 'pedestrian', 'skater', 'stroller']
+labels = ['bike', 'bus', 'car', 'truck', 'others', 'pedestrian', 'skateboard', 'stroller']
 counts = [0]*len(labels)
 
 for file in os.listdir("."):
