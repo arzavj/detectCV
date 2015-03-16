@@ -88,7 +88,6 @@ int main(int, char **)
         imwrite( "bgsOutput/DifImage" + to_string(count) + ".jpg", img_mask);
 //#endif
 
-        cout << frame.rows << ", " << frame.cols << endl;
         vector<Rect> windows = extractor.extractBoxes(img_mask);
 #ifdef WRITE_TO_FILE
         Mat windowWithoutLabel = frame.clone();
@@ -108,6 +107,16 @@ int main(int, char **)
             putText(windowWithoutLabel, classes[label], w.tl(), FONT_HERSHEY_SIMPLEX, 0.5, RED);
         }
 #endif
+
+        string windowDirName = "windowImages/";
+        //TODO: remove below loop
+        for (int i = 0; i < scoreLabels.size(); i++) {
+            Rect& w = windows[i];
+            string label = classes[scoreLabels[i].second];
+            string score = to_string(scoreLabels[i].first);
+            string filename = windowDirName + label + "_" + score + "_" + to_string(i);
+            imwrite(filename, frame(w));
+        }
 
 #ifdef WRITE_TO_FILE
         imwrite("withLabel/image" + to_string(count) + ".jpg", windowWithoutLabel);
